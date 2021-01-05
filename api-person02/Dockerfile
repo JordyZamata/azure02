@@ -1,6 +1,11 @@
-FROM openjdk:8-jdk-alpine
-VOLUME /tmp
-EXPOSE 8080
-ARG JAR_FILE=target/api-person02-0.0.1-SNAPSHOT.jar
-ADD ${JAR_FILE} app.jar
-ENTRYPOINT ["java","-Djava-security.egd-file:/dev/-/urandom","-jar","/app.jar"]
+FROM maven:3.6-jdk-8-alpine AS builder
+WORKDIR  /app
+COPY pom.xml ./
+RUN mvn -e -B dependency:resolve
+COPY src ./src
+RUN mvn -e -B package
+FROM openjdk:8-jre-alpine
+RUN apk add --no-cache tzdata
+COPY --from=builder /app/target/api-person02-0.0.1-SNAPSHOT.jar  /
+CMD ["java", "-jar", "/api-person02-0.0.1-SNAPSHOT.jar"]
+

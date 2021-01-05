@@ -15,8 +15,8 @@ spec:
         app: api-person02
     spec:
       containers:
-        - name: api-person02
-          image: api-person02/prueba
+        - name: api-person03
+          image: api-person03/prueba
           resources:
             requests:
               memory: "256Mi"
