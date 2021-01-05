@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: person02
+  labels:
+    app: api-person02
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-person02
+  template:
+    metadata:
+      labels:
+        app: api-person02
+    spec:
+      containers:
+        - name: api-person02
+          image: api-person02/prueba
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      imagePullSecrets:
+        - name: regcred
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: api-person02
+spec:
+  selector:
+    app: api-person02
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
